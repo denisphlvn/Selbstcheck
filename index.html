@@ -11,9 +11,7 @@
       --muted: #5e6670;
       --white: #ffffff;
       --green: #238a69;
-      --green-light: #e1f5ed;
       --yellow: #d59518;
-      --yellow-light: #fff4d5;
 
       font-family: Arial, Helvetica, sans-serif;
       color: var(--dark);
@@ -36,7 +34,11 @@
     }
 
     #selfcheck-app .header {
-      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+      background: linear-gradient(
+        135deg,
+        var(--blue) 0%,
+        var(--blue-dark) 100%
+      );
       color: white;
       padding: 25px 28px 22px;
       position: relative;
@@ -49,7 +51,7 @@
       width: 130px;
       height: 130px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.10);
+      background: rgba(255, 255, 255, 0.10);
       right: -30px;
       top: -55px;
     }
@@ -107,7 +109,11 @@
 
     #selfcheck-app .progress {
       height: 100%;
-      background: linear-gradient(90deg, var(--red), #f33d6d);
+      background: linear-gradient(
+        90deg,
+        var(--red),
+        #f33d6d
+      );
       border-radius: 999px;
       transition: width 0.3s ease;
     }
@@ -360,7 +366,10 @@
 
       <div class="counter-row">
         <div class="counter" id="counter"></div>
-        <div class="progress-number" id="progressNumber"></div>
+        <div
+          class="progress-number"
+          id="progressNumber"
+        ></div>
       </div>
 
       <div
@@ -369,64 +378,119 @@
         aria-label="Fortschritt"
         id="progressTrack"
       >
-        <div class="progress" id="progress"></div>
+        <div
+          class="progress"
+          id="progress"
+        ></div>
       </div>
 
       <div class="question-box">
         <h1 id="questionText"></h1>
       </div>
 
-      <p class="prompt">Wie sehr trifft das auf dich zu?</p>
+      <p class="prompt">
+        Wie sehr trifft das auf dich zu?
+      </p>
 
       <div class="answers">
-        <button type="button" class="answer" data-value="3">
-          Trifft voll zu
+
+        <button
+          type="button"
+          class="answer"
+          data-value="3"
+        >
+          Trifft zu
         </button>
 
-        <button type="button" class="answer" data-value="2">
-          Eher zu
+        <button
+          type="button"
+          class="answer"
+          data-value="2"
+        >
+          Trifft eher zu
         </button>
 
-        <button type="button" class="answer" data-value="1">
-          Eher nicht
+        <button
+          type="button"
+          class="answer"
+          data-value="1"
+        >
+          Trifft eher nicht zu
         </button>
 
-        <button type="button" class="answer" data-value="0">
-          Nicht zu
+        <button
+          type="button"
+          class="answer"
+          data-value="0"
+        >
+          Trifft nicht zu
         </button>
+
       </div>
 
       <nav class="navigation">
-        <button type="button" class="back" id="backButton">
+        <button
+          type="button"
+          class="back"
+          id="backButton"
+        >
           ← Zur vorherigen Aussage
         </button>
       </nav>
+
     </main>
 
-    <section class="result" id="resultView" aria-live="polite">
-      <div class="result-content" id="resultContent">
+    <section
+      class="result"
+      id="resultView"
+      aria-live="polite"
+    >
 
-        <div class="result-icon" id="resultIcon">✓</div>
+      <div
+        class="result-content"
+        id="resultContent"
+      >
+
+        <div
+          class="result-icon"
+          id="resultIcon"
+        >
+          ✓
+        </div>
 
         <h1 id="resultTitle"></h1>
 
-        <p class="result-message" id="resultMessage"></p>
+        <p
+          class="result-message"
+          id="resultMessage"
+        ></p>
 
-        <div class="encouragement" id="encouragement"></div>
+        <div
+          class="encouragement"
+          id="encouragement"
+        ></div>
 
-        <button type="button" class="restart" id="restartButton">
+        <button
+          type="button"
+          class="restart"
+          id="restartButton"
+        >
           Selbstcheck wiederholen
         </button>
 
       </div>
+
     </section>
 
     <div class="footer-bar"></div>
+
   </div>
 
   <script>
     (() => {
-      const root = document.getElementById("selfcheck-app");
+
+      const root =
+        document.getElementById("selfcheck-app");
 
       const questions = [
         "Ich bringe gern Menschen zusammen und mache andere stark.",
@@ -439,97 +503,192 @@
       ];
 
       /*
-        Punktelogik:
-        Trifft voll zu = 3
-        Eher zu = 2
-        Eher nicht = 1
-        Nicht zu = 0
+        AUSWERTUNGSLOGIK
 
-        Maximalwert = 21 Punkte
+        Trifft zu:
+        3 Punkte
+
+        Trifft eher zu:
+        2 Punkte
+
+        Trifft eher nicht zu:
+        1 Punkt
+
+        Trifft nicht zu:
+        0 Punkte
+
+        7 Fragen × 3 Punkte
+        = maximal 21 Punkte
 
         Feedback:
-        11-21 = positive Passung
-        6-10  = gemischtes Bild
-        0-5   = eher geringe Passung
+
+        11 bis 21 Punkte
+        = positive Passung
+
+        6 bis 10 Punkte
+        = gemischte Passung
+
+        0 bis 5 Punkte
+        = momentan eher geringe Passung
+
+        Die Punktzahl wird den
+        Teilnehmer*innen nicht angezeigt.
       */
 
       let currentQuestion = 0;
-      let answers = new Array(questions.length).fill(null);
 
-      const questionView = root.querySelector("#questionView");
-      const resultView = root.querySelector("#resultView");
-      const resultContent = root.querySelector("#resultContent");
-      const resultIcon = root.querySelector("#resultIcon");
-      const resultTitle = root.querySelector("#resultTitle");
-      const resultMessage = root.querySelector("#resultMessage");
-      const encouragement = root.querySelector("#encouragement");
+      let answers =
+        new Array(questions.length).fill(null);
 
-      const questionText = root.querySelector("#questionText");
-      const counter = root.querySelector("#counter");
-      const progress = root.querySelector("#progress");
-      const progressNumber = root.querySelector("#progressNumber");
-      const progressTrack = root.querySelector("#progressTrack");
+      const questionView =
+        root.querySelector("#questionView");
 
-      const backButton = root.querySelector("#backButton");
-      const restartButton = root.querySelector("#restartButton");
-      const answerButtons = [...root.querySelectorAll(".answer")];
+      const resultView =
+        root.querySelector("#resultView");
+
+      const resultContent =
+        root.querySelector("#resultContent");
+
+      const resultIcon =
+        root.querySelector("#resultIcon");
+
+      const resultTitle =
+        root.querySelector("#resultTitle");
+
+      const resultMessage =
+        root.querySelector("#resultMessage");
+
+      const encouragement =
+        root.querySelector("#encouragement");
+
+      const questionText =
+        root.querySelector("#questionText");
+
+      const counter =
+        root.querySelector("#counter");
+
+      const progress =
+        root.querySelector("#progress");
+
+      const progressNumber =
+        root.querySelector("#progressNumber");
+
+      const progressTrack =
+        root.querySelector("#progressTrack");
+
+      const backButton =
+        root.querySelector("#backButton");
+
+      const restartButton =
+        root.querySelector("#restartButton");
+
+      const answerButtons = [
+        ...root.querySelectorAll(".answer")
+      ];
+
 
       function renderQuestion() {
-        questionText.textContent = questions[currentQuestion];
+
+        questionText.textContent =
+          questions[currentQuestion];
 
         counter.textContent =
           `Aussage ${currentQuestion + 1} von ${questions.length}`;
 
         const percentage =
-          Math.round(((currentQuestion + 1) / questions.length) * 100);
+          Math.round(
+            ((currentQuestion + 1) /
+            questions.length) * 100
+          );
 
-        progress.style.width = `${percentage}%`;
-        progressNumber.textContent = `${percentage} %`;
+        progress.style.width =
+          `${percentage}%`;
 
-        progressTrack.setAttribute("aria-valuemin", "0");
-        progressTrack.setAttribute("aria-valuemax", "100");
-        progressTrack.setAttribute("aria-valuenow", String(percentage));
+        progressNumber.textContent =
+          `${percentage} %`;
 
-        backButton.hidden = currentQuestion === 0;
+        progressTrack.setAttribute(
+          "aria-valuemin",
+          "0"
+        );
+
+        progressTrack.setAttribute(
+          "aria-valuemax",
+          "100"
+        );
+
+        progressTrack.setAttribute(
+          "aria-valuenow",
+          String(percentage)
+        );
+
+        backButton.hidden =
+          currentQuestion === 0;
 
         answerButtons.forEach(button => {
-          const value = Number(button.dataset.value);
+
+          const value =
+            Number(button.dataset.value);
 
           button.classList.toggle(
             "selected",
             answers[currentQuestion] === value
           );
+
         });
 
         questionView.style.display = "block";
         resultView.style.display = "none";
       }
 
+
       function selectAnswer(value) {
+
         answers[currentQuestion] = value;
 
         answerButtons.forEach(button => {
+
           button.classList.toggle(
             "selected",
             Number(button.dataset.value) === value
           );
+
         });
 
+        /*
+          Kurze Verzögerung:
+          Dadurch sehen die TN kurz,
+          welche Antwort ausgewählt wurde.
+        */
+
         window.setTimeout(() => {
-          if (currentQuestion < questions.length - 1) {
+
+          if (
+            currentQuestion <
+            questions.length - 1
+          ) {
+
             currentQuestion++;
             renderQuestion();
+
           } else {
+
             showResult();
+
           }
+
         }, 200);
       }
 
+
       function showResult() {
-        const score = answers.reduce(
-          (sum, value) => sum + (value ?? 0),
-          0
-        );
+
+        const score =
+          answers.reduce(
+            (sum, value) =>
+              sum + (value ?? 0),
+            0
+          );
 
         resultContent.classList.remove(
           "result-positive",
@@ -537,8 +696,17 @@
           "result-reflect"
         );
 
+
+        /*
+          POSITIVES ERGEBNIS
+          11 bis 21 Punkte
+        */
+
         if (score >= 11) {
-          resultContent.classList.add("result-positive");
+
+          resultContent.classList.add(
+            "result-positive"
+          );
 
           resultIcon.textContent = "✓";
 
@@ -546,14 +714,24 @@
             "Das sieht nach einer guten Passung aus!";
 
           resultMessage.textContent =
-            "Viele deiner Antworten passen gut zu dem, was dich in dieser Tätigkeit erwartet. Es sieht also so aus, als könnten wichtige Aspekte der Stelle gut zu dir und deiner Art zu arbeiten passen.";
+            "Viele deiner Antworten passen gut zu den Anforderungen und Rahmenbedingungen, die du während der Infoveranstaltung kennengelernt hast. Die Tätigkeit könnte also gut zu dir, deiner Art zu arbeiten und deiner aktuellen Situation passen.";
 
           encouragement.textContent =
-            "Wenn dich die Tätigkeit nach den Infos heute anspricht, lohnt es sich auf jeden Fall, den nächsten Schritt zu gehen und mehr darüber zu erfahren.";
+            "Wenn dich die Tätigkeit auch nach den Einblicken heute anspricht, möchten wir dich ermutigen, dich zu bewerben. Wir freuen uns darauf, mehr über dich und deine Motivation zu erfahren!";
+
         }
 
+
+        /*
+          GEMISCHTES ERGEBNIS
+          6 bis 10 Punkte
+        */
+
         else if (score >= 6) {
-          resultContent.classList.add("result-neutral");
+
+          resultContent.classList.add(
+            "result-neutral"
+          );
 
           resultIcon.textContent = "↔";
 
@@ -561,14 +739,24 @@
             "Da ist einiges dabei, das zu dir passen könnte.";
 
           resultMessage.textContent =
-            "Deine Antworten ergeben ein gemischtes Bild: Einige Aspekte der Tätigkeit scheinen gut zu dir zu passen, andere möglicherweise etwas weniger. Das ist kein ungewöhnliches Ergebnis – kaum eine Tätigkeit passt in jedem Punkt perfekt.";
+            "Deine Antworten ergeben ein gemischtes Bild: Einige Aspekte der Tätigkeit scheinen gut zu dir zu passen, andere möglicherweise etwas weniger. Das ist kein ungewöhnliches Ergebnis – schließlich muss nicht jeder Aspekt einer Tätigkeit gleichermaßen zu den eigenen Vorstellungen passen.";
 
           encouragement.textContent =
-            "Überlege dir ruhig, welche Punkte dir besonders wichtig sind und bei welchen du noch Fragen hast. Vielleicht helfen dir die weiteren Informationen oder ein Gespräch dabei, besser einzuschätzen, ob die Tätigkeit etwas für dich ist.";
+            "Überlege dir, welche Punkte für dich besonders wichtig sind und bei welchen du noch unsicher bist. Wenn Fragen offen geblieben sind, komm gerne auf uns zu. Und wenn dein Interesse an der Tätigkeit überwiegt, lass dich von einzelnen weniger passenden Punkten nicht vorschnell von einer Bewerbung abhalten.";
+
         }
 
+
+        /*
+          EHER GERINGE PASSUNG
+          0 bis 5 Punkte
+        */
+
         else {
-          resultContent.classList.add("result-reflect");
+
+          resultContent.classList.add(
+            "result-reflect"
+          );
 
           resultIcon.textContent = "?";
 
@@ -576,53 +764,94 @@
             "Auf den ersten Blick passt noch nicht alles zusammen.";
 
           resultMessage.textContent =
-            "Einige der beschriebenen Aspekte der Tätigkeit scheinen momentan eher weniger zu deinen Vorstellungen oder deiner aktuellen Situation zu passen. Dieser kurze Selbstcheck kann aber natürlich nicht alles berücksichtigen.";
+            "Mehrere Aspekte der Tätigkeit scheinen nach deinen Antworten momentan eher weniger zu deinen Vorstellungen oder deiner aktuellen Situation zu passen. Das ist zunächst nur eine Orientierung – dieser kurze Selbstcheck kann natürlich nicht alle Seiten der Tätigkeit und deine persönliche Situation abbilden.";
 
           encouragement.textContent =
-            "Wenn dich die Tätigkeit trotzdem interessiert, hake gerne nach und komm mit deinen Fragen auf uns zu. Im persönlichen Gespräch lässt sich oft viel besser klären, was hinter einzelnen Anforderungen steckt und ob die Stelle für dich trotzdem interessant sein könnte.";
+            "Wenn dich die Tätigkeit trotzdem interessiert, lass dich von diesem Ergebnis nicht entmutigen. Sprich uns gerne auf die Punkte an, bei denen du unsicher bist. Im Austausch lässt sich besser klären, was die Anforderungen konkret bedeuten und ob die Tätigkeit für dich vielleicht doch infrage kommt.";
+
         }
 
-        questionView.style.display = "none";
-        resultView.style.display = "block";
+
+        questionView.style.display =
+          "none";
+
+        resultView.style.display =
+          "block";
 
         root.scrollIntoView({
           behavior: "smooth",
           block: "start"
         });
+
       }
 
+
       answerButtons.forEach(button => {
-        button.addEventListener("click", () => {
-          selectAnswer(Number(button.dataset.value));
-        });
-      });
 
-      backButton.addEventListener("click", () => {
-        if (currentQuestion > 0) {
-          currentQuestion--;
-          renderQuestion();
-        }
-      });
+        button.addEventListener(
+          "click",
+          () => {
 
-      restartButton.addEventListener("click", () => {
-        currentQuestion = 0;
-        answers = new Array(questions.length).fill(null);
+            selectAnswer(
+              Number(button.dataset.value)
+            );
 
-        resultContent.classList.remove(
-          "result-positive",
-          "result-neutral",
-          "result-reflect"
+          }
         );
 
-        renderQuestion();
-
-        root.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
       });
 
+
+      backButton.addEventListener(
+        "click",
+        () => {
+
+          if (currentQuestion > 0) {
+
+            currentQuestion--;
+            renderQuestion();
+
+          }
+
+        }
+      );
+
+
+      restartButton.addEventListener(
+        "click",
+        () => {
+
+          currentQuestion = 0;
+
+          answers =
+            new Array(
+              questions.length
+            ).fill(null);
+
+          resultContent.classList.remove(
+            "result-positive",
+            "result-neutral",
+            "result-reflect"
+          );
+
+          renderQuestion();
+
+          root.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+
+        }
+      );
+
+
+      /*
+        Selbstcheck starten
+      */
+
       renderQuestion();
+
     })();
   </script>
+
 </div>
