@@ -1,5 +1,28 @@
-<div id="selfcheck-app">
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selbstcheck – Passt die Tätigkeit zu mir?</title>
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      background: #f2f9fd;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
     #selfcheck-app {
       --red: #e4003b;
       --red-dark: #c90035;
@@ -13,16 +36,11 @@
       --green: #238a69;
       --yellow: #d59518;
 
-      font-family: Arial, Helvetica, sans-serif;
       color: var(--dark);
+      width: 100%;
       max-width: 780px;
       margin: 0 auto;
       padding: 22px 18px 40px;
-      box-sizing: border-box;
-    }
-
-    #selfcheck-app * {
-      box-sizing: border-box;
     }
 
     #selfcheck-app .card {
@@ -32,6 +50,8 @@
       box-shadow: 0 8px 30px rgba(32, 36, 42, 0.10);
       border: 1px solid #d9edf8;
     }
+
+    /* HEADER */
 
     #selfcheck-app .header {
       background: linear-gradient(
@@ -73,10 +93,15 @@
       line-height: 1.25;
     }
 
+    /* CONTENT */
+
     #selfcheck-app .content {
       padding: 28px;
-      background:
-        linear-gradient(180deg, var(--blue-soft) 0px, white 180px);
+      background: linear-gradient(
+        180deg,
+        var(--blue-soft) 0px,
+        white 180px
+      );
     }
 
     #selfcheck-app .counter-row {
@@ -99,6 +124,8 @@
       font-weight: 700;
     }
 
+    /* FORTSCHRITT */
+
     #selfcheck-app .progress-track {
       height: 9px;
       background: #dbeaf2;
@@ -117,6 +144,8 @@
       border-radius: 999px;
       transition: width 0.3s ease;
     }
+
+    /* FRAGE */
 
     #selfcheck-app .question-box {
       background: white;
@@ -140,6 +169,8 @@
       font-weight: 600;
     }
 
+    /* ANTWORTEN */
+
     #selfcheck-app .answers {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -147,16 +178,19 @@
     }
 
     #selfcheck-app .answer {
+      width: 100%;
       min-height: 64px;
       border: 2px solid #b8def2;
       background: white;
       border-radius: 14px;
       padding: 13px 16px;
       font-size: 17px;
+      line-height: 1.3;
       color: var(--dark);
       cursor: pointer;
       text-align: left;
       font-weight: 600;
+
       transition:
         background 0.15s,
         border-color 0.15s,
@@ -181,6 +215,8 @@
       color: white;
     }
 
+    /* ZURÜCK */
+
     #selfcheck-app .navigation {
       margin-top: 21px;
       min-height: 34px;
@@ -192,7 +228,7 @@
       color: var(--muted);
       font-size: 15px;
       cursor: pointer;
-      padding: 6px 0;
+      padding: 8px 0;
       font-weight: 600;
     }
 
@@ -206,6 +242,8 @@
       display: none;
     }
 
+    /* ERGEBNIS */
+
     #selfcheck-app .result {
       display: none;
     }
@@ -213,8 +251,12 @@
     #selfcheck-app .result-content {
       padding: 34px 28px 30px;
       text-align: center;
-      background:
-        linear-gradient(180deg, var(--blue-soft) 0%, white 60%);
+
+      background: linear-gradient(
+        180deg,
+        var(--blue-soft) 0%,
+        white 60%
+      );
     }
 
     #selfcheck-app .result-icon {
@@ -222,9 +264,11 @@
       height: 74px;
       margin: 0 auto 18px;
       border-radius: 50%;
+
       display: flex;
       align-items: center;
       justify-content: center;
+
       color: white;
       font-size: 34px;
       font-weight: 700;
@@ -232,6 +276,7 @@
 
     #selfcheck-app .result h1 {
       font-size: 28px;
+      line-height: 1.25;
       margin: 0 0 17px;
     }
 
@@ -246,12 +291,18 @@
       max-width: 590px;
       margin: 0 auto 28px;
       padding: 16px 18px;
+
       background: white;
       border-radius: 14px;
+
       color: var(--muted);
-      line-height: 1.5;
+      font-size: 16px;
+      line-height: 1.55;
+
       box-shadow: 0 3px 14px rgba(32, 36, 42, 0.07);
     }
+
+    /* ERGEBNISFARBEN */
 
     #selfcheck-app .result-positive .result-icon {
       background: var(--green);
@@ -277,14 +328,19 @@
       color: #9a6700;
     }
 
+    /* NEU STARTEN */
+
     #selfcheck-app .restart {
       border: 0;
       background: var(--red);
       color: white;
+
       border-radius: 12px;
-      padding: 14px 22px;
+      padding: 15px 22px;
+
       font-size: 16px;
       font-weight: 700;
+
       cursor: pointer;
     }
 
@@ -296,6 +352,7 @@
 
     #selfcheck-app .footer-bar {
       height: 8px;
+
       background: linear-gradient(
         90deg,
         var(--red) 0 30%,
@@ -303,17 +360,39 @@
       );
     }
 
+    /* =========================================
+       SMARTPHONE-ANSICHT
+       ========================================= */
+
     @media (max-width: 600px) {
+
+      body {
+        background: white;
+      }
+
       #selfcheck-app {
-        padding: 10px;
+        width: 100%;
+        max-width: none;
+        padding: 0;
       }
 
       #selfcheck-app .card {
-        border-radius: 18px;
+        width: 100%;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
       }
 
       #selfcheck-app .header {
-        padding: 21px 19px 19px;
+        padding:
+          20px
+          18px
+          18px;
+      }
+
+      #selfcheck-app .header-label {
+        font-size: 12px;
+        padding: 6px 10px;
       }
 
       #selfcheck-app .header h2 {
@@ -321,291 +400,488 @@
       }
 
       #selfcheck-app .content {
-        padding: 21px 17px 23px;
+        padding:
+          22px
+          17px
+          25px;
+      }
+
+      #selfcheck-app .counter {
+        font-size: 14px;
+      }
+
+      #selfcheck-app .progress-number {
+        font-size: 14px;
+      }
+
+      #selfcheck-app .progress-track {
+        height: 8px;
+        margin-bottom: 20px;
       }
 
       #selfcheck-app .question-box {
         padding: 18px;
+        margin-bottom: 20px;
+        border-left-width: 5px;
       }
 
       #selfcheck-app .question-box h1 {
         font-size: 22px;
+        line-height: 1.35;
       }
 
+      #selfcheck-app .prompt {
+        font-size: 16px;
+        margin-bottom: 12px;
+      }
+
+      /* 
+         Auf dem Smartphone stehen die
+         Antwortoptionen IMMER untereinander.
+      */
+
       #selfcheck-app .answers {
+        display: grid;
         grid-template-columns: 1fr;
+        gap: 11px;
+        width: 100%;
       }
 
       #selfcheck-app .answer {
-        min-height: 58px;
-        font-size: 16px;
+        display: block;
+        width: 100%;
+
+        min-height: 62px;
+        padding: 16px 17px;
+
+        font-size: 17px;
+        line-height: 1.3;
+
+        border-radius: 13px;
+
+        text-align: left;
+        touch-action: manipulation;
+      }
+
+      #selfcheck-app .navigation {
+        margin-top: 17px;
+      }
+
+      #selfcheck-app .back {
+        font-size: 15px;
+        padding: 10px 0;
       }
 
       #selfcheck-app .result-content {
-        padding: 29px 19px 27px;
+        padding:
+          30px
+          18px
+          28px;
+      }
+
+      #selfcheck-app .result-icon {
+        width: 68px;
+        height: 68px;
+        font-size: 31px;
       }
 
       #selfcheck-app .result h1 {
         font-size: 25px;
+        line-height: 1.3;
       }
 
       #selfcheck-app .result-message {
         font-size: 17px;
+        line-height: 1.55;
       }
+
+      #selfcheck-app .encouragement {
+        font-size: 16px;
+        line-height: 1.5;
+        padding: 16px;
+      }
+
+      #selfcheck-app .restart {
+        width: 100%;
+        min-height: 56px;
+        font-size: 16px;
+      }
+
     }
   </style>
+</head>
 
-  <div class="card">
+<body>
 
-    <header class="header">
-      <div class="header-label">SELBSTCHECK</div>
-      <h2>Passt die Tätigkeit zu mir?</h2>
-    </header>
+  <div id="selfcheck-app">
 
-    <main id="questionView" class="content">
+    <div class="card">
 
-      <div class="counter-row">
-        <div class="counter" id="counter"></div>
-        <div
-          class="progress-number"
-          id="progressNumber"
-        ></div>
-      </div>
+      <!-- KOPFBEREICH -->
 
-      <div
-        class="progress-track"
-        role="progressbar"
-        aria-label="Fortschritt"
-        id="progressTrack"
-      >
-        <div
-          class="progress"
-          id="progress"
-        ></div>
-      </div>
+      <header class="header">
 
-      <div class="question-box">
-        <h1 id="questionText"></h1>
-      </div>
-
-      <p class="prompt">
-        Wie sehr trifft das auf dich zu?
-      </p>
-
-      <div class="answers">
-
-        <button
-          type="button"
-          class="answer"
-          data-value="3"
-        >
-          Trifft zu
-        </button>
-
-        <button
-          type="button"
-          class="answer"
-          data-value="2"
-        >
-          Trifft eher zu
-        </button>
-
-        <button
-          type="button"
-          class="answer"
-          data-value="1"
-        >
-          Trifft eher nicht zu
-        </button>
-
-        <button
-          type="button"
-          class="answer"
-          data-value="0"
-        >
-          Trifft nicht zu
-        </button>
-
-      </div>
-
-      <nav class="navigation">
-        <button
-          type="button"
-          class="back"
-          id="backButton"
-        >
-          ← Zur vorherigen Aussage
-        </button>
-      </nav>
-
-    </main>
-
-    <section
-      class="result"
-      id="resultView"
-      aria-live="polite"
-    >
-
-      <div
-        class="result-content"
-        id="resultContent"
-      >
-
-        <div
-          class="result-icon"
-          id="resultIcon"
-        >
-          ✓
+        <div class="header-label">
+          SELBSTCHECK
         </div>
 
-        <h1 id="resultTitle"></h1>
+        <h2>
+          Passt die Tätigkeit zu mir?
+        </h2>
 
-        <p
-          class="result-message"
-          id="resultMessage"
-        ></p>
+      </header>
+
+
+      <!-- FRAGENBEREICH -->
+
+      <main
+        id="questionView"
+        class="content"
+      >
+
+        <div class="counter-row">
+
+          <div
+            class="counter"
+            id="counter"
+          ></div>
+
+          <div
+            class="progress-number"
+            id="progressNumber"
+          ></div>
+
+        </div>
+
+
+        <!-- FORTSCHRITTSBALKEN -->
 
         <div
-          class="encouragement"
-          id="encouragement"
-        ></div>
-
-        <button
-          type="button"
-          class="restart"
-          id="restartButton"
+          class="progress-track"
+          role="progressbar"
+          aria-label="Fortschritt"
+          id="progressTrack"
         >
-          Selbstcheck wiederholen
-        </button>
 
-      </div>
+          <div
+            class="progress"
+            id="progress"
+          ></div>
 
-    </section>
+        </div>
 
-    <div class="footer-bar"></div>
+
+        <!-- AKTUELLE AUSSAGE -->
+
+        <div class="question-box">
+
+          <h1 id="questionText"></h1>
+
+        </div>
+
+
+        <p class="prompt">
+          Wie sehr trifft das auf dich zu?
+        </p>
+
+
+        <!-- ANTWORTOPTIONEN -->
+
+        <div class="answers">
+
+          <button
+            type="button"
+            class="answer"
+            data-value="3"
+          >
+            Trifft zu
+          </button>
+
+          <button
+            type="button"
+            class="answer"
+            data-value="2"
+          >
+            Trifft eher zu
+          </button>
+
+          <button
+            type="button"
+            class="answer"
+            data-value="1"
+          >
+            Trifft eher nicht zu
+          </button>
+
+          <button
+            type="button"
+            class="answer"
+            data-value="0"
+          >
+            Trifft nicht zu
+          </button>
+
+        </div>
+
+
+        <!-- ZURÜCK -->
+
+        <nav class="navigation">
+
+          <button
+            type="button"
+            class="back"
+            id="backButton"
+          >
+            ← Zur vorherigen Aussage
+          </button>
+
+        </nav>
+
+      </main>
+
+
+      <!-- ERGEBNIS -->
+
+      <section
+        class="result"
+        id="resultView"
+        aria-live="polite"
+      >
+
+        <div
+          class="result-content"
+          id="resultContent"
+        >
+
+          <div
+            class="result-icon"
+            id="resultIcon"
+          >
+            ✓
+          </div>
+
+          <h1 id="resultTitle"></h1>
+
+          <p
+            class="result-message"
+            id="resultMessage"
+          ></p>
+
+          <div
+            class="encouragement"
+            id="encouragement"
+          ></div>
+
+          <button
+            type="button"
+            class="restart"
+            id="restartButton"
+          >
+            Selbstcheck wiederholen
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- FARBIGE ABSCHLUSSLINIE -->
+
+      <div class="footer-bar"></div>
+
+    </div>
 
   </div>
+
 
   <script>
     (() => {
 
-      const root =
-        document.getElementById("selfcheck-app");
+      /*
+        ========================================
+        FRAGEN
+        ========================================
+      */
 
       const questions = [
+
         "Ich bringe gern Menschen zusammen und mache andere stark.",
+
         "Ich bleibe dran, auch wenn sich Erfolge erst langsam zeigen.",
+
         "Ich arbeite gern im Team und stimme mich gern ab.",
+
         "Ich plane und organisiere gern, auch für mehrere Betriebe parallel.",
+
         "Ich gehe gern auf Kolleg*innen zu, die ich noch nicht kenne.",
+
         "Ich bin gern unterwegs und flexibel bei Terminen, auch früh oder abends.",
+
         "Eine auf drei Jahre befristete Stelle passt in meine Lebenssituation."
+
       ];
 
+
       /*
+        ========================================
         AUSWERTUNGSLOGIK
 
-        Trifft zu:
-        3 Punkte
+        Trifft zu             = 3 Punkte
+        Trifft eher zu        = 2 Punkte
+        Trifft eher nicht zu  = 1 Punkt
+        Trifft nicht zu       = 0 Punkte
 
-        Trifft eher zu:
-        2 Punkte
+        Maximalwert:
+        7 × 3 = 21 Punkte
 
-        Trifft eher nicht zu:
-        1 Punkt
+        11–21 Punkte:
+        positive Rückmeldung
 
-        Trifft nicht zu:
-        0 Punkte
+        6–10 Punkte:
+        gemischte Rückmeldung
 
-        7 Fragen × 3 Punkte
-        = maximal 21 Punkte
-
-        Feedback:
-
-        11 bis 21 Punkte
-        = positive Passung
-
-        6 bis 10 Punkte
-        = gemischte Passung
-
-        0 bis 5 Punkte
-        = momentan eher geringe Passung
+        0–5 Punkte:
+        niedrigere Passung
 
         Die Punktzahl wird den
         Teilnehmer*innen nicht angezeigt.
+        ========================================
       */
+
+
+      const root =
+        document.getElementById(
+          "selfcheck-app"
+        );
+
 
       let currentQuestion = 0;
 
+
       let answers =
-        new Array(questions.length).fill(null);
+        new Array(
+          questions.length
+        ).fill(null);
+
+
+      /*
+        ELEMENTE
+      */
 
       const questionView =
-        root.querySelector("#questionView");
+        root.querySelector(
+          "#questionView"
+        );
 
       const resultView =
-        root.querySelector("#resultView");
+        root.querySelector(
+          "#resultView"
+        );
 
       const resultContent =
-        root.querySelector("#resultContent");
+        root.querySelector(
+          "#resultContent"
+        );
 
       const resultIcon =
-        root.querySelector("#resultIcon");
+        root.querySelector(
+          "#resultIcon"
+        );
 
       const resultTitle =
-        root.querySelector("#resultTitle");
+        root.querySelector(
+          "#resultTitle"
+        );
 
       const resultMessage =
-        root.querySelector("#resultMessage");
+        root.querySelector(
+          "#resultMessage"
+        );
 
       const encouragement =
-        root.querySelector("#encouragement");
+        root.querySelector(
+          "#encouragement"
+        );
 
       const questionText =
-        root.querySelector("#questionText");
+        root.querySelector(
+          "#questionText"
+        );
 
       const counter =
-        root.querySelector("#counter");
+        root.querySelector(
+          "#counter"
+        );
 
       const progress =
-        root.querySelector("#progress");
+        root.querySelector(
+          "#progress"
+        );
 
       const progressNumber =
-        root.querySelector("#progressNumber");
+        root.querySelector(
+          "#progressNumber"
+        );
 
       const progressTrack =
-        root.querySelector("#progressTrack");
+        root.querySelector(
+          "#progressTrack"
+        );
 
       const backButton =
-        root.querySelector("#backButton");
+        root.querySelector(
+          "#backButton"
+        );
 
       const restartButton =
-        root.querySelector("#restartButton");
+        root.querySelector(
+          "#restartButton"
+        );
 
       const answerButtons = [
-        ...root.querySelectorAll(".answer")
+        ...root.querySelectorAll(
+          ".answer"
+        )
       ];
 
+
+      /*
+        ========================================
+        FRAGE ANZEIGEN
+        ========================================
+      */
 
       function renderQuestion() {
 
         questionText.textContent =
           questions[currentQuestion];
 
+
         counter.textContent =
-          `Aussage ${currentQuestion + 1} von ${questions.length}`;
+          `Aussage ${
+            currentQuestion + 1
+          } von ${
+            questions.length
+          }`;
+
 
         const percentage =
           Math.round(
-            ((currentQuestion + 1) /
-            questions.length) * 100
+            (
+              (currentQuestion + 1) /
+              questions.length
+            ) * 100
           );
+
 
         progress.style.width =
           `${percentage}%`;
 
+
         progressNumber.textContent =
           `${percentage} %`;
+
 
         progressTrack.setAttribute(
           "aria-valuemin",
@@ -622,64 +898,105 @@
           String(percentage)
         );
 
+
         backButton.hidden =
           currentQuestion === 0;
 
-        answerButtons.forEach(button => {
 
-          const value =
-            Number(button.dataset.value);
+        answerButtons.forEach(
+          button => {
 
-          button.classList.toggle(
-            "selected",
-            answers[currentQuestion] === value
-          );
+            const value =
+              Number(
+                button.dataset.value
+              );
 
-        });
+            button.classList.toggle(
+              "selected",
+              answers[
+                currentQuestion
+              ] === value
+            );
 
-        questionView.style.display = "block";
-        resultView.style.display = "none";
+          }
+        );
+
+
+        questionView.style.display =
+          "block";
+
+        resultView.style.display =
+          "none";
+
       }
 
+
+      /*
+        ========================================
+        ANTWORT AUSWÄHLEN
+        ========================================
+      */
 
       function selectAnswer(value) {
 
-        answers[currentQuestion] = value;
+        answers[
+          currentQuestion
+        ] = value;
 
-        answerButtons.forEach(button => {
 
-          button.classList.toggle(
-            "selected",
-            Number(button.dataset.value) === value
-          );
+        answerButtons.forEach(
+          button => {
 
-        });
+            button.classList.toggle(
+              "selected",
+              Number(
+                button.dataset.value
+              ) === value
+            );
+
+          }
+        );
+
 
         /*
           Kurze Verzögerung:
-          Dadurch sehen die TN kurz,
-          welche Antwort ausgewählt wurde.
+          Die ausgewählte Antwort wird
+          sichtbar markiert, bevor
+          die nächste Frage erscheint.
         */
 
-        window.setTimeout(() => {
+        window.setTimeout(
+          () => {
 
-          if (
-            currentQuestion <
-            questions.length - 1
-          ) {
+            if (
+              currentQuestion <
+              questions.length - 1
+            ) {
 
-            currentQuestion++;
-            renderQuestion();
+              currentQuestion++;
 
-          } else {
+              renderQuestion();
 
-            showResult();
+            }
 
-          }
+            else {
 
-        }, 200);
+              showResult();
+
+            }
+
+          },
+          200
+        );
+
       }
 
+
+      /*
+        ========================================
+        ERGEBNIS BERECHNEN
+        ========================================
+      */
 
       function showResult() {
 
@@ -690,6 +1007,7 @@
             0
           );
 
+
         resultContent.classList.remove(
           "result-positive",
           "result-neutral",
@@ -698,8 +1016,10 @@
 
 
         /*
-          POSITIVES ERGEBNIS
-          11 bis 21 Punkte
+          ----------------------------
+          11–21 PUNKTE
+          POSITIVE PASSUNG
+          ----------------------------
         */
 
         if (score >= 11) {
@@ -708,13 +1028,18 @@
             "result-positive"
           );
 
-          resultIcon.textContent = "✓";
+
+          resultIcon.textContent =
+            "✓";
+
 
           resultTitle.textContent =
             "Das sieht nach einer guten Passung aus!";
 
+
           resultMessage.textContent =
             "Viele deiner Antworten passen gut zu den Anforderungen und Rahmenbedingungen, die du während der Infoveranstaltung kennengelernt hast. Die Tätigkeit könnte also gut zu dir, deiner Art zu arbeiten und deiner aktuellen Situation passen.";
+
 
           encouragement.textContent =
             "Wenn dich die Tätigkeit auch nach den Einblicken heute anspricht, möchten wir dich ermutigen, dich zu bewerben. Wir freuen uns darauf, mehr über dich und deine Motivation zu erfahren!";
@@ -723,8 +1048,10 @@
 
 
         /*
-          GEMISCHTES ERGEBNIS
-          6 bis 10 Punkte
+          ----------------------------
+          6–10 PUNKTE
+          GEMISCHTES BILD
+          ----------------------------
         */
 
         else if (score >= 6) {
@@ -733,13 +1060,18 @@
             "result-neutral"
           );
 
-          resultIcon.textContent = "↔";
+
+          resultIcon.textContent =
+            "↔";
+
 
           resultTitle.textContent =
             "Da ist einiges dabei, das zu dir passen könnte.";
 
+
           resultMessage.textContent =
             "Deine Antworten ergeben ein gemischtes Bild: Einige Aspekte der Tätigkeit scheinen gut zu dir zu passen, andere möglicherweise etwas weniger. Das ist kein ungewöhnliches Ergebnis – schließlich muss nicht jeder Aspekt einer Tätigkeit gleichermaßen zu den eigenen Vorstellungen passen.";
+
 
           encouragement.textContent =
             "Überlege dir, welche Punkte für dich besonders wichtig sind und bei welchen du noch unsicher bist. Wenn Fragen offen geblieben sind, komm gerne auf uns zu. Und wenn dein Interesse an der Tätigkeit überwiegt, lass dich von einzelnen weniger passenden Punkten nicht vorschnell von einer Bewerbung abhalten.";
@@ -748,8 +1080,10 @@
 
 
         /*
+          ----------------------------
+          0–5 PUNKTE
           EHER GERINGE PASSUNG
-          0 bis 5 Punkte
+          ----------------------------
         */
 
         else {
@@ -758,13 +1092,18 @@
             "result-reflect"
           );
 
-          resultIcon.textContent = "?";
+
+          resultIcon.textContent =
+            "?";
+
 
           resultTitle.textContent =
             "Auf den ersten Blick passt noch nicht alles zusammen.";
 
+
           resultMessage.textContent =
             "Mehrere Aspekte der Tätigkeit scheinen nach deinen Antworten momentan eher weniger zu deinen Vorstellungen oder deiner aktuellen Situation zu passen. Das ist zunächst nur eine Orientierung – dieser kurze Selbstcheck kann natürlich nicht alle Seiten der Tätigkeit und deine persönliche Situation abbilden.";
+
 
           encouragement.textContent =
             "Wenn dich die Tätigkeit trotzdem interessiert, lass dich von diesem Ergebnis nicht entmutigen. Sprich uns gerne auf die Punkte an, bei denen du unsicher bist. Im Austausch lässt sich besser klären, was die Anforderungen konkret bedeuten und ob die Tätigkeit für dich vielleicht doch infrage kommt.";
@@ -772,43 +1111,73 @@
         }
 
 
+        /*
+          Fragen ausblenden,
+          Ergebnis einblenden
+        */
+
         questionView.style.display =
           "none";
 
         resultView.style.display =
           "block";
 
-        root.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
+
+        /*
+          Auf dem Smartphone wieder
+          nach ganz oben zum Ergebnis.
+        */
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
         });
 
       }
 
 
-      answerButtons.forEach(button => {
+      /*
+        ========================================
+        ANTWORT-BUTTONS
+        ========================================
+      */
 
-        button.addEventListener(
-          "click",
-          () => {
+      answerButtons.forEach(
+        button => {
 
-            selectAnswer(
-              Number(button.dataset.value)
-            );
+          button.addEventListener(
+            "click",
+            () => {
 
-          }
-        );
+              selectAnswer(
+                Number(
+                  button.dataset.value
+                )
+              );
 
-      });
+            }
+          );
 
+        }
+      );
+
+
+      /*
+        ========================================
+        ZURÜCK
+        ========================================
+      */
 
       backButton.addEventListener(
         "click",
         () => {
 
-          if (currentQuestion > 0) {
+          if (
+            currentQuestion > 0
+          ) {
 
             currentQuestion--;
+
             renderQuestion();
 
           }
@@ -817,16 +1186,24 @@
       );
 
 
+      /*
+        ========================================
+        SELBSTCHECK WIEDERHOLEN
+        ========================================
+      */
+
       restartButton.addEventListener(
         "click",
         () => {
 
           currentQuestion = 0;
 
+
           answers =
             new Array(
               questions.length
             ).fill(null);
+
 
           resultContent.classList.remove(
             "result-positive",
@@ -834,11 +1211,13 @@
             "result-reflect"
           );
 
+
           renderQuestion();
 
-          root.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
+
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth"
           });
 
         }
@@ -846,7 +1225,9 @@
 
 
       /*
-        Selbstcheck starten
+        ========================================
+        SELBSTCHECK STARTEN
+        ========================================
       */
 
       renderQuestion();
@@ -854,4 +1235,5 @@
     })();
   </script>
 
-</div>
+</body>
+</html>
