@@ -1,3 +1,557 @@
+<div id="selfcheck-app">
+  <style>
+    #selfcheck-app {
+      --red: #e4003b;
+      --red-dark: #c90035;
+      --blue: #46a9df;
+      --blue-dark: #2388c1;
+      --blue-light: #e5f4fc;
+      --blue-soft: #f2f9fd;
+      --dark: #20242a;
+      --muted: #5e6670;
+      --white: #ffffff;
+      --green: #238a69;
+      --green-light: #e1f5ed;
+      --yellow: #d59518;
+      --yellow-light: #fff4d5;
+
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--dark);
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 22px 18px 40px;
+      box-sizing: border-box;
+    }
+
+    #selfcheck-app * {
+      box-sizing: border-box;
+    }
+
+    #selfcheck-app .card {
+      background: var(--white);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(32, 36, 42, 0.10);
+      border: 1px solid #d9edf8;
+    }
+
+    #selfcheck-app .header {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+      color: white;
+      padding: 25px 28px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #selfcheck-app .header::after {
+      content: "";
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.10);
+      right: -30px;
+      top: -55px;
+    }
+
+    #selfcheck-app .header-label {
+      display: inline-block;
+      background: var(--red);
+      color: white;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    #selfcheck-app .header h2 {
+      margin: 0;
+      font-size: 25px;
+      line-height: 1.25;
+    }
+
+    #selfcheck-app .content {
+      padding: 28px;
+      background:
+        linear-gradient(180deg, var(--blue-soft) 0px, white 180px);
+    }
+
+    #selfcheck-app .counter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 9px;
+    }
+
+    #selfcheck-app .counter {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    #selfcheck-app .progress-number {
+      color: var(--blue-dark);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    #selfcheck-app .progress-track {
+      height: 9px;
+      background: #dbeaf2;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 26px;
+    }
+
+    #selfcheck-app .progress {
+      height: 100%;
+      background: linear-gradient(90deg, var(--red), #f33d6d);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    #selfcheck-app .question-box {
+      background: white;
+      border-left: 6px solid var(--red);
+      border-radius: 14px;
+      padding: 20px 21px;
+      margin-bottom: 22px;
+      box-shadow: 0 3px 14px rgba(35, 136, 193, 0.09);
+    }
+
+    #selfcheck-app .question-box h1 {
+      font-size: 25px;
+      line-height: 1.35;
+      margin: 0;
+    }
+
+    #selfcheck-app .prompt {
+      font-size: 15px;
+      color: var(--muted);
+      margin: 0 0 12px;
+      font-weight: 600;
+    }
+
+    #selfcheck-app .answers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    #selfcheck-app .answer {
+      min-height: 64px;
+      border: 2px solid #b8def2;
+      background: white;
+      border-radius: 14px;
+      padding: 13px 16px;
+      font-size: 17px;
+      color: var(--dark);
+      cursor: pointer;
+      text-align: left;
+      font-weight: 600;
+      transition:
+        background 0.15s,
+        border-color 0.15s,
+        color 0.15s,
+        transform 0.08s;
+    }
+
+    #selfcheck-app .answer:hover,
+    #selfcheck-app .answer:focus-visible {
+      border-color: var(--blue);
+      background: var(--blue-light);
+      outline: none;
+    }
+
+    #selfcheck-app .answer:active {
+      transform: scale(0.985);
+    }
+
+    #selfcheck-app .answer.selected {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: white;
+    }
+
+    #selfcheck-app .navigation {
+      margin-top: 21px;
+      min-height: 34px;
+    }
+
+    #selfcheck-app .back {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 15px;
+      cursor: pointer;
+      padding: 6px 0;
+      font-weight: 600;
+    }
+
+    #selfcheck-app .back:hover,
+    #selfcheck-app .back:focus-visible {
+      color: var(--red);
+      outline: none;
+    }
+
+    #selfcheck-app .back[hidden] {
+      display: none;
+    }
+
+    #selfcheck-app .result {
+      display: none;
+    }
+
+    #selfcheck-app .result-content {
+      padding: 34px 28px 30px;
+      text-align: center;
+      background:
+        linear-gradient(180deg, var(--blue-soft) 0%, white 60%);
+    }
+
+    #selfcheck-app .result-icon {
+      width: 74px;
+      height: 74px;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 34px;
+      font-weight: 700;
+    }
+
+    #selfcheck-app .result h1 {
+      font-size: 28px;
+      margin: 0 0 17px;
+    }
+
+    #selfcheck-app .result-message {
+      font-size: 18px;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto 27px;
+    }
+
+    #selfcheck-app .encouragement {
+      max-width: 590px;
+      margin: 0 auto 28px;
+      padding: 16px 18px;
+      background: white;
+      border-radius: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+      box-shadow: 0 3px 14px rgba(32, 36, 42, 0.07);
+    }
+
+    #selfcheck-app .result-positive .result-icon {
+      background: var(--green);
+    }
+
+    #selfcheck-app .result-positive h1 {
+      color: var(--green);
+    }
+
+    #selfcheck-app .result-neutral .result-icon {
+      background: var(--blue);
+    }
+
+    #selfcheck-app .result-neutral h1 {
+      color: var(--blue-dark);
+    }
+
+    #selfcheck-app .result-reflect .result-icon {
+      background: var(--yellow);
+    }
+
+    #selfcheck-app .result-reflect h1 {
+      color: #9a6700;
+    }
+
+    #selfcheck-app .restart {
+      border: 0;
+      background: var(--red);
+      color: white;
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    #selfcheck-app .restart:hover,
+    #selfcheck-app .restart:focus-visible {
+      background: var(--red-dark);
+      outline: 3px solid rgba(228, 0, 59, 0.18);
+    }
+
+    #selfcheck-app .footer-bar {
+      height: 8px;
+      background: linear-gradient(
+        90deg,
+        var(--red) 0 30%,
+        var(--blue) 30% 100%
+      );
+    }
+
+    @media (max-width: 600px) {
+      #selfcheck-app {
+        padding: 10px;
+      }
+
+      #selfcheck-app .card {
+        border-radius: 18px;
+      }
+
+      #selfcheck-app .header {
+        padding: 21px 19px 19px;
+      }
+
+      #selfcheck-app .header h2 {
+        font-size: 22px;
+      }
+
+      #selfcheck-app .content {
+        padding: 21px 17px 23px;
+      }
+
+      #selfcheck-app .question-box {
+        padding: 18px;
+      }
+
+      #selfcheck-app .question-box h1 {
+        font-size: 22px;
+      }
+
+      #selfcheck-app .answers {
+        grid-template-columns: 1fr;
+      }
+
+      #selfcheck-app .answer {
+        min-height: 58px;
+        font-size: 16px;
+      }
+
+      #selfcheck-app .result-content {
+        padding: 29px 19px 27px;
+      }
+
+      #selfcheck-app .result h1 {
+        font-size: 25px;
+      }
+
+      #selfcheck-app .result-message {
+        font-size: 17px;
+      }
+    }
+  </style>
+
+  <div class="card">
+
+    <header class="header">
+      <div class="header-label">SELBSTCHECK</div>
+      <h2>Passt die Tätigkeit zu mir?</h2>
+    </header>
+
+    <main id="questionView" class="content">
+
+      <div class="counter-row">
+        <div class="counter" id="counter"></div>
+        <div class="progress-number" id="progressNumber"></div>
+      </div>
+
+      <div
+        class="progress-track"
+        role="progressbar"
+        aria-label="Fortschritt"
+        id="progressTrack"
+      >
+        <div class="progress" id="progress"></div>
+      </div>
+
+      <div class="question-box">
+        <h1 id="questionText"></h1>
+      </div>
+
+      <p class="prompt">Wie sehr trifft das auf dich zu?</p>
+
+      <div class="answers">
+        <button type="button" class="answer" data-value="3">
+          Trifft voll zu
+        </button>
+
+        <button type="button" class="answer" data-value="2">
+          Eher zu
+        </button>
+
+        <button type="button" class="answer" data-value="1">
+          Eher nicht
+        </button>
+
+        <button type="button" class="answer" data-value="0">
+          Nicht zu
+        </button>
+      </div>
+
+      <nav class="navigation">
+        <button type="button" class="back" id="backButton">
+          ← Zur vorherigen Aussage
+        </button>
+      </nav>
+    </main>
+
+    <section class="result" id="resultView" aria-live="polite">
+      <div class="result-content" id="resultContent">
+
+        <div class="result-icon" id="resultIcon">✓</div>
+
+        <h1 id="resultTitle"></h1>
+
+        <p class="result-message" id="resultMessage"></p>
+
+        <div class="encouragement" id="encouragement"></div>
+
+        <button type="button" class="restart" id="restartButton">
+          Selbstcheck wiederholen
+        </button>
+
+      </div>
+    </section>
+
+    <div class="footer-bar"></div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.getElementById("selfcheck-app");
+
+      const questions = [
+        "Ich bringe gern Menschen zusammen und mache andere stark.",
+        "Ich bleibe dran, auch wenn sich Erfolge erst langsam zeigen.",
+        "Ich arbeite gern im Team und stimme mich gern ab.",
+        "Ich plane und organisiere gern, auch für mehrere Betriebe parallel.",
+        "Ich gehe gern auf Kolleg*innen zu, die ich noch nicht kenne.",
+        "Ich bin gern unterwegs und flexibel bei Terminen, auch früh oder abends.",
+        "Eine auf drei Jahre befristete Stelle passt in meine Lebenssituation."
+      ];
+
+      /*
+        Punktelogik:
+        Trifft voll zu = 3
+        Eher zu = 2
+        Eher nicht = 1
+        Nicht zu = 0
+
+        Maximalwert = 21 Punkte
+
+        Feedback:
+        11-21 = positive Passung
+        6-10  = gemischtes Bild
+        0-5   = eher geringe Passung
+      */
+
+      let currentQuestion = 0;
+      let answers = new Array(questions.length).fill(null);
+
+      const questionView = root.querySelector("#questionView");
+      const resultView = root.querySelector("#resultView");
+      const resultContent = root.querySelector("#resultContent");
+      const resultIcon = root.querySelector("#resultIcon");
+      const resultTitle = root.querySelector("#resultTitle");
+      const resultMessage = root.querySelector("#resultMessage");
+      const encouragement = root.querySelector("#encouragement");
+
+      const questionText = root.querySelector("#questionText");
+      const counter = root.querySelector("#counter");
+      const progress = root.querySelector("#progress");
+      const progressNumber = root.querySelector("#progressNumber");
+      const progressTrack = root.querySelector("#progressTrack");
+
+      const backButton = root.querySelector("#backButton");
+      const restartButton = root.querySelector("#restartButton");
+      const answerButtons = [...root.querySelectorAll(".answer")];
+
+      function renderQuestion() {
+        questionText.textContent = questions[currentQuestion];
+
+        counter.textContent =
+          `Aussage ${currentQuestion + 1} von ${questions.length}`;
+
+        const percentage =
+          Math.round(((currentQuestion + 1) / questions.length) * 100);
+
+        progress.style.width = `${percentage}%`;
+        progressNumber.textContent = `${percentage} %`;
+
+        progressTrack.setAttribute("aria-valuemin", "0");
+        progressTrack.setAttribute("aria-valuemax", "100");
+        progressTrack.setAttribute("aria-valuenow", String(percentage));
+
+        backButton.hidden = currentQuestion === 0;
+
+        answerButtons.forEach(button => {
+          const value = Number(button.dataset.value);
+
+          button.classList.toggle(
+            "selected",
+            answers[currentQuestion] === value
+          );
+        });
+
+        questionView.style.display = "block";
+        resultView.style.display = "none";
+      }
+
+      function selectAnswer(value) {
+        answers[currentQuestion] = value;
+
+        answerButtons.forEach(button => {
+          button.classList.toggle(
+            "selected",
+            Number(button.dataset.value) === value
+          );
+        });
+
+        window.setTimeout(() => {
+          if (currentQuestion < questions.length - 1) {
+            currentQuestion++;
+            renderQuestion();
+          } else {
+            showResult();
+          }
+        }, 200);
+      }
+
+      function showResult() {
+        const score = answers.reduce(
+          (sum, value) => sum + (value ?? 0),
+          0
+        );
+
+        resultContent.classList.remove(
+          "result-positive",
+          "result-neutral",
+          "result-reflect"
+        );
+
+        if (score >= 11) {
+          resultContent.classList.add("result-positive");
+
+          resultIcon.textContent = "✓";
+
+          resultTitle.textContent =
+            "Das sieht nach einer guten Passung aus!";
+
+          resultMessage.textContent =
+            "Viele deiner Antworten passen gut zu dem, was dich in dieser Tätigkeit erwartet. Es sieht also so aus, als könnten wichtige Aspekte der Stelle gut zu dir und deiner Art zu arbeiten passen.";
+
+          encouragement.textContent =
+            "Wenn dich die Tätigkeit nach den Infos heute anspricht, lohnt es sich auf jeden Fall, den nächsten Schritt zu gehen und mehr darüber zu erfahren.";
+        }
+
         else if (score >= 6) {
           resultContent.classList.add("result-neutral");
 
