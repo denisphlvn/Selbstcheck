@@ -1,0 +1,328 @@
+<div id="selfcheck-app">
+  <style>
+    #selfcheck-app {
+      --red: #e4003b;
+      --blue: #48a9df;
+      --light-blue: #e5f3fb;
+      --dark: #222;
+      --muted: #666;
+      --white: #fff;
+
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--dark);
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 24px 18px 40px;
+      box-sizing: border-box;
+    }
+
+    #selfcheck-app * {
+      box-sizing: border-box;
+    }
+
+    #selfcheck-app .topbar {
+      height: 7px;
+      background: #e9e9e9;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 34px;
+    }
+
+    #selfcheck-app .progress {
+      height: 100%;
+      background: var(--red);
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+
+    #selfcheck-app .counter {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    #selfcheck-app h1 {
+      font-size: 29px;
+      line-height: 1.25;
+      margin: 0 0 34px;
+      font-weight: 700;
+    }
+
+    #selfcheck-app .answers {
+      display: grid;
+      gap: 12px;
+    }
+
+    #selfcheck-app .answer {
+      width: 100%;
+      min-height: 62px;
+      border: 2px solid var(--blue);
+      background: var(--white);
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 18px;
+      color: var(--dark);
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s, color 0.15s, transform 0.08s;
+    }
+
+    #selfcheck-app .answer:hover,
+    #selfcheck-app .answer:focus-visible {
+      background: var(--light-blue);
+      outline: none;
+    }
+
+    #selfcheck-app .answer:active {
+      transform: scale(0.99);
+    }
+
+    #selfcheck-app .answer.selected {
+      background: var(--blue);
+      color: white;
+    }
+
+    #selfcheck-app .navigation {
+      margin-top: 28px;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    #selfcheck-app .back {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 0;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    #selfcheck-app .back[hidden] {
+      display: none;
+    }
+
+    #selfcheck-app .result {
+      display: none;
+      text-align: center;
+      padding-top: 30px;
+    }
+
+    #selfcheck-app .result h1 {
+      color: var(--red);
+      margin-bottom: 18px;
+    }
+
+    #selfcheck-app .result p {
+      font-size: 19px;
+      line-height: 1.55;
+      margin: 0 auto 28px;
+      max-width: 580px;
+    }
+
+    #selfcheck-app .restart {
+      border: 2px solid var(--red);
+      background: var(--red);
+      color: white;
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    #selfcheck-app .restart:hover,
+    #selfcheck-app .restart:focus-visible {
+      background: #c90034;
+      outline: 3px solid rgba(228, 0, 59, 0.18);
+    }
+
+    @media (max-width: 520px) {
+      #selfcheck-app {
+        padding: 20px 15px 30px;
+      }
+
+      #selfcheck-app h1 {
+        font-size: 25px;
+        margin-bottom: 28px;
+      }
+
+      #selfcheck-app .answer {
+        font-size: 17px;
+        min-height: 58px;
+      }
+    }
+  </style>
+
+  <main id="questionView">
+    <div class="topbar" aria-hidden="true">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <div class="counter" id="counter"></div>
+
+    <h1 id="questionText"></h1>
+
+    <div class="answers" id="answerContainer">
+      <button type="button" class="answer" data-value="3">
+        Trifft voll zu
+      </button>
+      <button type="button" class="answer" data-value="2">
+        Eher zu
+      </button>
+      <button type="button" class="answer" data-value="1">
+        Eher nicht
+      </button>
+      <button type="button" class="answer" data-value="0">
+        Nicht zu
+      </button>
+    </div>
+
+    <nav class="navigation">
+      <button type="button" class="back" id="backButton">
+        ← Zurück
+      </button>
+    </nav>
+  </main>
+
+  <section class="result" id="resultView" aria-live="polite">
+    <h1>Fertig!</h1>
+
+    <p>
+      Danke für deine Einschätzung. Du hast alle sieben Aussagen beantwortet.
+    </p>
+
+    <p>
+      Hier wird später deine persönliche Rückmeldung zur Passung der Tätigkeit
+      angezeigt.
+    </p>
+
+    <button type="button" class="restart" id="restartButton">
+      Selbstcheck wiederholen
+    </button>
+  </section>
+
+  <script>
+    (() => {
+      const root = document.getElementById("selfcheck-app");
+
+      const questions = [
+        "Ich bringe gern Menschen zusammen und mache andere stark.",
+        "Ich bleibe dran, auch wenn sich Erfolge erst langsam zeigen.",
+        "Ich arbeite gern im Team und stimme mich gern ab.",
+        "Ich plane und organisiere gern, auch für mehrere Betriebe parallel.",
+        "Ich gehe gern auf Kolleg*innen zu, die ich noch nicht kenne.",
+        "Ich bin gern unterwegs und flexibel bei Terminen, auch früh oder abends.",
+        "Eine auf drei Jahre befristete Stelle passt in meine Lebenssituation."
+      ];
+
+      let currentQuestion = 0;
+      let answers = new Array(questions.length).fill(null);
+
+      const questionView = root.querySelector("#questionView");
+      const resultView = root.querySelector("#resultView");
+      const questionText = root.querySelector("#questionText");
+      const counter = root.querySelector("#counter");
+      const progress = root.querySelector("#progress");
+      const backButton = root.querySelector("#backButton");
+      const restartButton = root.querySelector("#restartButton");
+      const answerButtons = [...root.querySelectorAll(".answer")];
+
+      function renderQuestion() {
+        questionText.textContent = questions[currentQuestion];
+
+        counter.textContent =
+          `Aussage ${currentQuestion + 1} von ${questions.length}`;
+
+        progress.style.width =
+          `${((currentQuestion + 1) / questions.length) * 100}%`;
+
+        backButton.hidden = currentQuestion === 0;
+
+        answerButtons.forEach(button => {
+          const value = Number(button.dataset.value);
+          button.classList.toggle(
+            "selected",
+            answers[currentQuestion] === value
+          );
+        });
+
+        questionView.style.display = "block";
+        resultView.style.display = "none";
+      }
+
+      function selectAnswer(value) {
+        answers[currentQuestion] = value;
+
+        answerButtons.forEach(button => {
+          button.classList.toggle(
+            "selected",
+            Number(button.dataset.value) === value
+          );
+        });
+
+        /*
+          Kleine Verzögerung, damit die ausgewählte Antwort
+          kurz sichtbar bleibt, bevor es weitergeht.
+        */
+        window.setTimeout(() => {
+          if (currentQuestion < questions.length - 1) {
+            currentQuestion++;
+            renderQuestion();
+          } else {
+            showResult();
+          }
+        }, 220);
+      }
+
+      function showResult() {
+        /*
+          Der Gesamtwert ist technisch bereits vorbereitet.
+
+          Maximalwert:
+          7 Aussagen × 3 Punkte = 21 Punkte.
+
+          Die Variable "score" verwenden wir später für die
+          eigentliche Feedback- und Grenzwertlogik.
+        */
+        const score = answers.reduce(
+          (sum, value) => sum + (value ?? 0),
+          0
+        );
+
+        console.log("Gesamtpunktzahl:", score);
+        console.log("Antworten:", answers);
+
+        questionView.style.display = "none";
+        resultView.style.display = "block";
+
+        resultView.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+
+      answerButtons.forEach(button => {
+        button.addEventListener("click", () => {
+          selectAnswer(Number(button.dataset.value));
+        });
+      });
+
+      backButton.addEventListener("click", () => {
+        if (currentQuestion > 0) {
+          currentQuestion--;
+          renderQuestion();
+        }
+      });
+
+      restartButton.addEventListener("click", () => {
+        currentQuestion = 0;
+        answers = new Array(questions.length).fill(null);
+        renderQuestion();
+      });
+
+      renderQuestion();
+    })();
+  </script>
+</div>
